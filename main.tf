@@ -24,17 +24,22 @@ resource "aws_instance" "web" {
 
 resource "aws_cloudwatch_metric_alarm" "cpu_alarm" {
   alarm_name          = "dinesh-cpu-alarm"
+  alarm_description   = "Alarm when CPU exceeds 1%"
+
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/EC2"
-  period              = 60
-  statistic           = "Average"
-  threshold           = 70
+  datapoints_to_alarm = 1
 
-  alarm_description = "Alarm when CPU exceeds 70%"
+  metric_name = "CPUUtilization"
+  namespace   = "AWS/EC2"
+  statistic   = "Average"
+  period      = 60
+
+  threshold = 1
 
   dimensions = {
     InstanceId = aws_instance.web.id
   }
+
+  treat_missing_data = "missing"
 }
